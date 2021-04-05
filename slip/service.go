@@ -5,6 +5,6 @@ import (
 )
 
 type Service interface {
-	NewSlip(*Slip) url.URL
-	FindSlipByID(id string) url.URL
+	NewSlip(*Slip) (id string, url url.URL)
+	FindSlipByID(id string) *Slip
 }

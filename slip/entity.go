@@ -8,6 +8,7 @@ type Slip struct {
 	RefNumber   string
 	Title       string
 	DocDate     string
+	URL         string
 	SlipLines   []SlipLine
 	AccessToken string
 	CreateDate  time.Time
