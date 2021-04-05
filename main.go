@@ -2,45 +2,24 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"time"
 
-	"github.com/k0kubun/go-ansi"
-	"github.com/schollz/progressbar/v3"
+	"github.com/getsentry/sentry-go"
 )
 
 func main() {
+	err := sentry.Init(sentry.ClientOptions{
+		Dsn: "https://763f4dfb120449d3a8a0f1c1e1719723@o398852.ingest.sentry.io/5705647",
+	})
+	if err != nil {
+		log.Fatalf("sentry.Init: %s", err)
+	}
+	// Flush buffered events before the program terminates.
+	defer sentry.Flush(2 * time.Second)
+
+	sentry.CaptureMessage("It works!")
 
 	fmt.Println("GoSlip Service is running...")
-
-	doneCh := make(chan struct{})
-
-	bar := progressbar.NewOptions(100,
-		progressbar.OptionSetWriter(ansi.NewAnsiStdout()),
-		progressbar.OptionEnableColorCodes(true),
-		progressbar.OptionShowBytes(true),
-		progressbar.OptionSetWidth(15),
-		progressbar.OptionSetDescription("[cyan][1/3][reset] Writing moshable file..."),
-		progressbar.OptionSetTheme(progressbar.Theme{
-			Saucer:        "[green]=[reset]",
-			SaucerHead:    "[green]>[reset]",
-			SaucerPadding: " ",
-			BarStart:      "[",
-			BarEnd:        "]",
-		}),
-		progressbar.OptionOnCompletion(func() {
-			doneCh <- struct{}{}
-		}),
-	)
-
-	go func() {
-		for i := 0; i < 100; i++ {
-			bar.Add(1)
-			time.Sleep(5 * time.Millisecond)
-		}
-	}()
-
-	// got notified that progress bar is complete.
-	<-doneCh
-	fmt.Println("\n ======= progress bar completed ==========\n")
 
 }
