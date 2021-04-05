@@ -8,14 +8,13 @@ This project use to reduce slip paper for any POS or web application and let's c
 
 ## How it's work.
 
-Mobile Client or Caller service make a RESTful API call for NewSlip() function and service return a URL link for client to use for download or display a file
+Mobile Client or Caller service make a RESTful API call for NewSlip() function and service return a Shorten-URL link for client to use for download or display a file
 
 ```mermaid
 sequenceDiagram;
-participant Caller
-participant Service
+  participant Caller
+  participant Service
   Caller->>Service: NewSlip()
   Note over Service: Create slip file on server
   Service->>Caller: Slip URL
-
 ```

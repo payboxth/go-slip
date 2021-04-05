@@ -18,8 +18,8 @@ func main() {
 	// Flush buffered events before the program terminates.
 	defer sentry.Flush(2 * time.Second)
 
-	sentry.CaptureMessage("It works!")
+	sentry.CaptureMessage("Go-Slip service is started")
 
-	fmt.Println("GoSlip Service is running...")
+	fmt.Println("Go-Slip Service is running...")
 
 }
