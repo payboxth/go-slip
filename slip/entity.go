@@ -2,19 +2,19 @@ package slip
 
 import "time"
 
-type Slip struct {
+type Head struct {
 	ID          string
 	DocNumber   string
 	RefNumber   string
 	Title       string
 	DocDate     string
 	URL         string
-	Lines       []SlipLine
+	Lines       []Line
 	AccessToken string
 	CreateDate  time.Time
 }
 
-type SlipLine struct {
+type Line struct {
 	LineNumber  int8
 	SKU         string
 	Description string

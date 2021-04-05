@@ -5,7 +5,7 @@ import "context"
 // Endpoint is the slip endpoint
 type Endpoint interface {
 	Create(context.Context, *CreateRequest) (*CreateResponse, error)
-	FindByID(context.Context, *FindRequest) (*FindResponse, error)
+	FindByID(context.Context, *FindByIDRequest) (*FindByIDResponse, error)
 }
 
 // Create
@@ -28,7 +28,7 @@ type (
 )
 
 // Find
-type {
+type (
 	// FindRequest is the request for find endpoint
 	FindByIDRequest struct {
 		ID string `json:"id"`
@@ -38,4 +38,4 @@ type {
 	FindByIDResponse struct {
 		URL string `json:"id"`
 	}
-}
+)
