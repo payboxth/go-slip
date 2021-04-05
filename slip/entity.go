@@ -9,7 +9,7 @@ type Slip struct {
 	Title       string
 	DocDate     string
 	URL         string
-	SlipLines   []SlipLine
+	Lines       []SlipLine
 	AccessToken string
 	CreateDate  time.Time
 }

@@ -39,6 +39,20 @@ func NewHTTPTransport(ep Endpoint) http.Handler {
 
 	// or use https://github.com/acoshift/hrpc for RPC-HTTP style API
 	// mux.Handle("/create", m.Handler(ep.Create))
+	mux.Handle("/find/id", htpp.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var req FindByIDRequest
+		err := httptransport.DecodeJSON(r.Body, &req)
+		if err != nil {
+			errorEncoder(w, err)
+			return
+		}
+		resp, err := ep.FindByID(r.Context(), &req)
+		if err != nil {
+			errorEncoder(w, err)
+			return
+		}
+		httptransport.EncodeJSON(w, http.StatusOK, &resp)
 
+	}))
 	return mux
 }
