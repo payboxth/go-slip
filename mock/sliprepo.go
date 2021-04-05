@@ -13,11 +13,11 @@ type SlipRepository struct {
 }
 
 // Register calls RegisterFunc
-func (r *SlipRepository) Register(ctx context.Context, head *slip.Head) (string, error) {
+func (r *SlipRepository) Create(ctx context.Context, head *slip.Head) (string, error) {
 	return r.CreateFunc(ctx, head)
 }
 
 // FindByID calls FindByID func
-func (r *SlipRepository) SetField3(ctx context.Context, id string) (*slip.Head, error) {
+func (r *SlipRepository) FindByID(ctx context.Context, id string) (*slip.Head, error) {
 	return r.FindByIDFunc(ctx, id)
 }

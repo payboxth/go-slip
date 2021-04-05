@@ -22,13 +22,13 @@ func (s *service) Create(ctx context.Context, sl *slip.Head) (string, string, er
 		return "", "", err
 	}
 	image, err := NewImage(sl)
-	path, err := s.storage.StoreImage(ctx, image)
+	path, err := s.storage.SaveImage(ctx, image)
 	sl.URL = path
 	return id, path, nil
 }
 
 func (s *service) FindByID(ctx context.Context, id string) (*slip.Head, error) {
-	sl, err := s.repo.FindByID
+	sl, err := s.repo.FindByID(ctx, id)
 	if err != nil {
 		return nil, err
 	}
