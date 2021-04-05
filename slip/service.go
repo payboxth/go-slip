@@ -1,10 +1,6 @@
 package slip
 
-import (
-	"net/url"
-)
-
 type Service interface {
-	NewSlip(*Slip) (id string, url url.URL)
-	FindByID(id string) *Slip
+	NewSlip(*Head) (id string, url string, error)
+	FindByID(id string) (*Slip, error)
 }

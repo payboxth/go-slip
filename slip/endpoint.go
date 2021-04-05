@@ -16,7 +16,7 @@ type (
 		RefNumber   string `json:"ref_number"`
 		Title       string `json:"title"`
 		DocDate     string `json:"doc_date"`
-		SlipLines   []SlipLine
+		SlipLines   []Line
 		AccessToken string `json:"access_token"`
 	}
 
