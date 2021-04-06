@@ -19,13 +19,12 @@ func TestCreate(t *testing.T) {
 			// assert.Equal(t, "field1_data", head.Field2.Field1)
 			return "abc", "path/to/slip", nil
 		},
-		FindByIDFunc: func(ctx context.Context, id string) (*slip.Body, errorfunc(ctx context.Context, id string) (*slip.Body, error) {
+		FindByIDFunc: func(ctx context.Context, id string) (*slip.Body, error) {
 			// TODO:
 			b := &slip.Body{}
 			return b, nil
-		} ,
+		},
 	}
-
 
 	ep := endpoint.New(&s)
 	resp, err := ep.Create(&ctx, &slip.CreateRequest{
