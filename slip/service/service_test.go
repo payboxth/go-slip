@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"gopkg.in/go-playground/assert.v1"
 
 	"github.com/payboxth/go-slip/mock"
 	"github.com/payboxth/go-slip/slip"
