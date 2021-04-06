@@ -2,7 +2,7 @@ package slip
 
 import "time"
 
-type Head struct {
+type Body struct {
 	ID          string
 	DocNumber   string
 	RefNumber   string

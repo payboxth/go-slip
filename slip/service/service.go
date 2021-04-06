@@ -16,18 +16,29 @@ type service struct {
 	storage slip.Storage
 }
 
-func (s *service) Create(ctx context.Context, sl *slip.Head) (string, string, error) {
-	id, err := s.repo.Create(ctx, sl)
+// Create is service create slip body data to repository
+// and convert to slip image
+// and save image to storage
+func (s *service) Create(ctx context.Context, body *slip.Body) (string, string, error) {
+	image, err := NewImage(body)
 	if err != nil {
 		return "", "", err
 	}
-	image, err := NewImage(sl)
+
 	path, err := s.storage.SaveImage(ctx, image)
-	sl.URL = path
+	if err != nil {
+		return "", "", err
+	}
+
+	body.URL = path
+	id, err := s.repo.Create(ctx, body)
+	if err != nil {
+		return "", "", err
+	}
 	return id, path, nil
 }
 
-func (s *service) FindByID(ctx context.Context, id string) (*slip.Head, error) {
+func (s *service) FindByID(ctx context.Context, id string) (*slip.Body, error) {
 	sl, err := s.repo.FindByID(ctx, id)
 	if err != nil {
 		return nil, err
@@ -35,7 +46,7 @@ func (s *service) FindByID(ctx context.Context, id string) (*slip.Head, error) {
 	return sl, nil
 }
 
-func NewImage(sl *slip.Head) ([]byte, error) {
+func NewImage(sl *slip.Body) ([]byte, error) {
 	var image []byte
 	//TODO implement this function
 	// create html template and css

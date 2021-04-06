@@ -16,7 +16,7 @@ type endpoint struct {
 }
 
 func (ep *endpoint) Create(ctx context.Context, req *slip.CreateRequest) (*slip.CreateResponse, error) {
-	id, url, err := ep.s.Create(ctx, &slip.Head{})
+	id, url, err := ep.s.Create(ctx, &slip.Body{})
 	if err != nil {
 		return nil, err
 	}
