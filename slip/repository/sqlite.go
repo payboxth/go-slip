@@ -6,13 +6,13 @@ import (
 	"github.com/payboxth/go-slip/slip"
 )
 
-func NewSqlite() slip.Repository {
+func NewSqlite() slip.Database {
 	return &sqlite{}
 }
 
 type sqlite struct{}
 
-func (sqlite) Create(ctx context.Context, b *slip.Body) (id string, err error) {
+func (sqlite) Insert(ctx context.Context, b *slip.Body) (id string, err error) {
 	return "", nil
 }
 

@@ -7,12 +7,12 @@ import (
 )
 
 // New creates new domain1 service
-func New(repo slip.Repository, storage slip.Storage) slip.Service {
+func New(repo slip.Database, storage slip.Storage) slip.Service {
 	return &service{repo, storage}
 }
 
 type service struct {
-	repo    slip.Repository
+	db      slip.Database
 	storage slip.Storage
 }
 
@@ -25,13 +25,13 @@ func (s *service) Create(ctx context.Context, body *slip.Body) (string, string, 
 		return "", "", err
 	}
 
-	path, err := s.storage.SaveImage(ctx, image)
+	path, err := s.storage.SaveFile(ctx, image)
 	if err != nil {
 		return "", "", err
 	}
 
 	body.URL = path
-	id, err := s.repo.Create(ctx, body)
+	id, err := s.db.Insert(ctx, body)
 	if err != nil {
 		return "", "", err
 	}
@@ -39,7 +39,7 @@ func (s *service) Create(ctx context.Context, body *slip.Body) (string, string, 
 }
 
 func (s *service) FindByID(ctx context.Context, id string) (*slip.Body, error) {
-	sl, err := s.repo.FindByID(ctx, id)
+	sl, err := s.db.FindByID(ctx, id)
 	if err != nil {
 		return nil, err
 	}

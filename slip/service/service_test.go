@@ -13,7 +13,7 @@ import (
 
 func TestServiceCreate(t *testing.T) {
 	ctx := mock.Context{}
-	repo := mock.SlipRepository{
+	repo := mock.SlipDatabase{
 		CreateFunc: func(ctx context.Context, head *slip.Body) (string, error) {
 			assert.NotNil(t, head)
 			return "abc", nil
