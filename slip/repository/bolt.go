@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"os"
 	"time"
 
 	bolt "go.etcd.io/bbolt"
@@ -12,19 +13,29 @@ import (
 )
 
 func NewBolt() slip.Database {
-	return &boltDB{}
+	var database *boltDB
+	if _, err := os.Stat("slip.db"); os.IsNotExist(err) {
+		// slip.db does not exist
+		config := &bolt.Options{Timeout: 1 * time.Second}
+		b, err := bolt.Open("slip.db", 0600, config)
+		if err != nil {
+			return nil
+		}
+		database.db = b
+	}
+	return database
 }
 
-type boltDB struct{}
+type boltDB struct {
+	db *bolt.DB
+}
 
-func (boltDB) Insert(ctx context.Context, body *slip.Body) (id string, err error) {
-	db, err := bolt.Open("slip.db", 0600, &bolt.Options{Timeout: 1 * time.Second})
-	if err != nil {
-		return "", err
-	}
-	defer db.Close()
-	err = db.Update(func(tx *bolt.Tx) error {
-		b, err := tx.CreateBucketIfNotExists([]byte("slips"))
+// Insert is method for create new record in slip.db in bucket "slips"
+func (b boltDB) Insert(ctx context.Context, body *slip.Body) (id string, err error) {
+	// FIXME: not sure to use bolt.Open here?
+	defer b.db.Close()
+	err = b.db.Update(func(tx *bolt.Tx) error {
+		bucket, err := tx.CreateBucketIfNotExists([]byte("slips"))
 		if err != nil {
 			return err
 		}
@@ -35,14 +46,15 @@ func (boltDB) Insert(ctx context.Context, body *slip.Body) (id string, err error
 		if err != nil {
 			return err
 		}
-		err = b.Put([]byte(body.ID), encoded)
+		err = bucket.Put([]byte(body.ID), encoded)
 		return err
 	})
 	return body.ID, nil
 }
 
+// FindByID is method to get slip body by slip ID
 func (boltDB) FindByID(ctx context.Context, id string) (*slip.Body, error) {
-	// Todo: not sure to use bolt.Open here?
+	// TODO: not sure to use bolt.Open here?
 	db, err := bolt.Open("slip.db", 0600, &bolt.Options{Timeout: 1 * time.Second})
 	if err != nil {
 		return nil, err
