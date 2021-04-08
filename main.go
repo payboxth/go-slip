@@ -18,8 +18,10 @@ func main() {
 	// Flush buffered events before the program terminates.
 	defer sentry.Flush(2 * time.Second)
 
+	slipRepo := slip.NewSlipRepository()
+	slipService := slipimplement.New(slipRepo)
+	slipEndpoint := slipimplement.New(slipService)
 	sentry.CaptureMessage("Go-Slip service is started")
-
 	fmt.Println("Go-Slip Service is running...")
 
 }
