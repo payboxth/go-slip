@@ -25,14 +25,14 @@ func main() {
 	// Flush buffered events before the program terminates.
 	defer sentry.Flush(2 * time.Second)
 
-	slipDatabase := sliprepository.NewBolt()
-	slipStorage := sliprepository.NewGCS()
-	slipService := slipservice.New(slipDatabase, slipStorage)
-	slipEndpoint := slipendpoint.New(slipService)
+	database := sliprepository.NewBolt()
+	storage := sliprepository.NewGCS()
+	service := slipservice.New(database, storage)
+	endpoint := slipendpoint.New(service)
 
 	mux := http.NewServeMux()
-	mux.Handle("/", sliphandler.New(slipService))
-	mux.Handle("/slip/", http.StripPrefix("/slip", slip.NewHTTPTransport(slipEndpoint)))
+	mux.Handle("/", sliphandler.New(service))
+	mux.Handle("/slip/", http.StripPrefix("/slip", slip.NewHTTPTransport(endpoint)))
 
 	http.ListenAndServe(":8080", mux)
 

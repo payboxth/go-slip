@@ -17,11 +17,10 @@ func NewBolt() slip.Database {
 	if _, err := os.Stat("slip.db"); os.IsNotExist(err) {
 		// slip.db does not exist
 		config := &bolt.Options{Timeout: 1 * time.Second}
-		b, err := bolt.Open("slip.db", 0600, config)
+		database.db, err = bolt.Open("slip.db", 0600, config)
 		if err != nil {
 			return nil
 		}
-		database.db = b
 	}
 	return database
 }
@@ -39,7 +38,7 @@ func (b boltDB) Insert(ctx context.Context, body *slip.Body) (id string, err err
 		if err != nil {
 			return err
 		}
-		id, _ := b.NextSequence()
+		id, _ := bucket.NextSequence()
 		body.ID = fmt.Sprint(id)
 
 		encoded, err := json.Marshal(body)
