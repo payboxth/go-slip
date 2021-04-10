@@ -24,12 +24,12 @@ func (s *service) Create(ctx context.Context, body *slip.Body) (string, string, 
 	if err != nil {
 		return "", "", err
 	}
-
+	// Save image file to Storage
 	path, err := s.storage.SaveFile(ctx, image)
 	if err != nil {
 		return "", "", err
 	}
-
+	// Save returned path to body.URL and insert data row to Database
 	body.URL = path
 	id, err := s.db.Insert(ctx, body)
 	if err != nil {
@@ -39,14 +39,14 @@ func (s *service) Create(ctx context.Context, body *slip.Body) (string, string, 
 }
 
 func (s *service) FindByID(ctx context.Context, id string) (*slip.Body, error) {
-	sl, err := s.db.FindByID(ctx, id)
+	body, err := s.db.FindByID(ctx, id)
 	if err != nil {
 		return nil, err
 	}
-	return sl, nil
+	return body, nil
 }
 
-func NewImage(sl *slip.Body) ([]byte, error) {
+func NewImage(body *slip.Body) ([]byte, error) {
 	var image []byte
 	//TODO implement this function
 	// create html template and css

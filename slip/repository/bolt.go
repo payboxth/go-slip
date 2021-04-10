@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"os"
 	"time"
 
 	bolt "go.etcd.io/bbolt"
@@ -12,17 +11,17 @@ import (
 	"github.com/payboxth/go-slip/slip"
 )
 
-func NewBolt() slip.Database {
-	var database *boltDB
-	if _, err := os.Stat("slip.db"); os.IsNotExist(err) {
-		// slip.db does not exist
-		config := &bolt.Options{Timeout: 1 * time.Second}
-		database.db, err = bolt.Open("slip.db", 0600, config)
-		if err != nil {
-			return nil
-		}
+func NewBolt(fileName string) (slip.Database, error) {
+	database := new(boltDB)
+	// if _, err := os.Stat(path); os.IsNotExist(err) {
+	// 	// slip.db does not exist
+	// config := &bolt.Options{Timeout: 1 * time.Second}
+	b, err := bolt.Open(fileName, 0600, nil)
+	if err != nil {
+		return nil, err
 	}
-	return database
+	database.db = b
+	return database, nil
 }
 
 type boltDB struct {
