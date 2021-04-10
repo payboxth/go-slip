@@ -25,7 +25,10 @@ func main() {
 	// Flush buffered events before the program terminates.
 	defer sentry.Flush(2 * time.Second)
 
-	database := sliprepository.NewBolt("slip.db")
+	database, err := sliprepository.NewBolt("slip.db")
+	if err != nil {
+		log.Fatal(err)
+	}
 	storage := sliprepository.NewGCS()
 	service := slipservice.New(database, storage)
 	endpoint := slipendpoint.New(service)

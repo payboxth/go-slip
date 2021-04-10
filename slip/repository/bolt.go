@@ -15,8 +15,8 @@ func NewBolt(fileName string) (slip.Database, error) {
 	database := new(boltDB)
 	// if _, err := os.Stat(path); os.IsNotExist(err) {
 	// 	// slip.db does not exist
-	// config := &bolt.Options{Timeout: 1 * time.Second}
-	b, err := bolt.Open(fileName, 0600, nil)
+	config := &bolt.Options{Timeout: 1 * time.Second}
+	b, err := bolt.Open(fileName, 0600, config)
 	if err != nil {
 		return nil, err
 	}
