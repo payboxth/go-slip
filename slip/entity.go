@@ -8,10 +8,10 @@ type Body struct {
 	RefNumber   string
 	Title       string
 	DocDate     string
-	URL         string
-	Lines       []Line
+	ImageURL    string
 	AccessToken string
 	CreateDate  time.Time
+	Lines       []Line
 }
 
 type Line struct {

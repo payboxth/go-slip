@@ -25,17 +25,17 @@ func (s *service) Create(ctx context.Context, body *slip.Body) (string, string, 
 		return "", "", err
 	}
 	// Save image file to Storage
-	path, err := s.storage.SaveFile(ctx, image)
+	url, err := s.storage.SaveFile(ctx, image)
 	if err != nil {
 		return "", "", err
 	}
 	// Save returned path to body.URL and insert data row to Database
-	body.URL = path
+	body.ImageURL = url
 	id, err := s.db.Insert(ctx, body)
 	if err != nil {
 		return "", "", err
 	}
-	return id, path, nil
+	return id, url, nil
 }
 
 func (s *service) FindByID(ctx context.Context, id string) (*slip.Body, error) {
