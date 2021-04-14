@@ -14,7 +14,7 @@ import (
 func NewBolt(fileName string) (slip.Database, error) {
 	database := new(boltDB)
 	// if _, err := os.Stat(path); os.IsNotExist(err) {
-	// 	// slip.db does not exist
+	// slip.db does not exist
 	config := &bolt.Options{Timeout: 1 * time.Second}
 	b, err := bolt.Open(fileName, 0600, config)
 	if err != nil {
@@ -30,7 +30,6 @@ type boltDB struct {
 
 // Insert is method for create new record in slip.db in bucket "slips"
 func (b boltDB) Insert(ctx context.Context, body *slip.Body) (id string, err error) {
-	// FIXME: not sure to use bolt.Open here?
 	defer b.db.Close()
 	err = b.db.Update(func(tx *bolt.Tx) error {
 		bucket, err := tx.CreateBucketIfNotExists([]byte("slips"))
