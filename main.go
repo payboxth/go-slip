@@ -29,7 +29,12 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	storage := sliprepository.NewGCS()
+	// Create new Google Cloud Storage(GCS) instant with Service Account Key in srcret folder.
+	storage, err := sliprepository.NewGCS("paybox_slip", "./secret/paybox_slip.json")
+	if err != nil {
+		sentry.CaptureMessage(err.Error())
+	}
+	// Create new Slip Service and Endpoint
 	service := slipservice.New(database, storage)
 	endpoint := slipendpoint.New(service)
 
@@ -39,7 +44,7 @@ func main() {
 
 	http.ListenAndServe(":8080", mux)
 
-	sentry.CaptureMessage("Go-Slip service is started")
+	sentry.CaptureMessage("Go-Slip service started.")
 	fmt.Println("Go-Slip Service is running...")
 
 }

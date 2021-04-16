@@ -1,6 +1,8 @@
 package slip
 
-import "context"
+import (
+	"context"
+)
 
 // Database is the slip database interface
 type Database interface {
@@ -13,5 +15,5 @@ type Database interface {
 
 // Storage is the slip storage interface for save image file
 type Storage interface {
-	SaveFile(ctx context.Context, file []byte) (url string, err error)
+	SaveFile(file string) (url string, err error)
 }
