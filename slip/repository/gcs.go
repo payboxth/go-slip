@@ -36,8 +36,8 @@ func (s *gcs) generateName() string {
 	return uuid.New().String()
 }
 
-func (s *gcs) SaveFile(f string) (url string, err error) {
-	fmt.Println("start file service.StoreFile ")
+func (s *gcs) SaveFile(f string, path string) (url string, err error) {
+	fmt.Println("start gcs.SaveFile() ")
 	b, err := ioutil.ReadFile(f)
 	if err != nil {
 		return "", err
@@ -46,13 +46,13 @@ func (s *gcs) SaveFile(f string) (url string, err error) {
 	ctx := context.Background()
 	// fileName := s.generateName() + "." + typeDir
 	fileName := s.generateName()
-	filePath := fmt.Sprintf("public/%s", fileName)
+	filePath := fmt.Sprintf("%s/%s", path, fileName)
 	obj := s.bucket.Object(filePath)
 	w := obj.NewWriter(ctx)
 	defer func() {
 		err := w.Close()
 		if err != nil {
-			fmt.Printf("Cannot Close *storage.Writer: %v", err) // TODO หาวิธีส่ง Error ไปเก็บ
+			fmt.Printf("Cannot Close *storage.Writer: %v\n", err) // TODO หาวิธีส่ง Error ไปเก็บ
 		}
 	}()
 
