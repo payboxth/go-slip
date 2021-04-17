@@ -16,6 +16,6 @@ type Database interface {
 
 // Storage is the slip storage interface for save image file
 type Storage interface {
-	SaveFile(ctx context.Context, file, path string) (url string, err error)
+	StoreFile(ctx context.Context, file, path string) (url string, err error)
 	StoreOriginPNG(ctx context.Context, m image.Image, path string) (url string, err error)
 }

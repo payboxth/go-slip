@@ -43,7 +43,7 @@ func encodePNG(w io.Writer, m image.Image) error {
 	return png.Encode(w, m)
 }
 
-func (s *gcs) SaveFile(ctx context.Context, file, path string) (url string, err error) {
+func (s *gcs) StoreFile(ctx context.Context, file, path string) (url string, err error) {
 	fileName := s.generateName()
 	filePath := fmt.Sprintf("%s/%s", path, fileName)
 	obj := s.bucket.Object(filePath)
