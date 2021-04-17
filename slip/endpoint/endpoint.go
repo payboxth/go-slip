@@ -16,7 +16,7 @@ type endpoint struct {
 }
 
 func (ep *endpoint) Create(ctx context.Context, req *slip.CreateRequest) (*slip.CreateResponse, error) {
-	id, url, err := ep.s.Create(ctx, &slip.Head{})
+	id, url, err := ep.s.Create(ctx, &slip.Body{})
 	if err != nil {
 		return nil, err
 	}
@@ -31,5 +31,5 @@ func (ep *endpoint) FindByID(ctx context.Context, req *slip.FindByIDRequest) (*s
 	if err != nil {
 		return nil, err
 	}
-	return &slip.FindByIDResponse{URL: h.URL}, nil
+	return &slip.FindByIDResponse{URL: h.ImageURL}, nil
 }

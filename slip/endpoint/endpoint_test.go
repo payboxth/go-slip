@@ -14,10 +14,15 @@ import (
 func TestCreate(t *testing.T) {
 	ctx := mock.Context{}
 	s := mock.SlipService{
-		CreateFunc: func(ctx context.Context, head *slip.Head) (id string, err error) {
+		CreateFunc: func(ctx context.Context, b *slip.Body) (id string, url string, err error) {
 			// TODO:
 			// assert.Equal(t, "field1_data", head.Field2.Field1)
-			return "abc", nil
+			return "abc", "path/to/slip", nil
+		},
+		FindByIDFunc: func(ctx context.Context, id string) (*slip.Body, error) {
+			// TODO:
+			b := &slip.Body{}
+			return b, nil
 		},
 	}
 
