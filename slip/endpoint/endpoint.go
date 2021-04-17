@@ -31,5 +31,5 @@ func (ep *endpoint) FindByID(ctx context.Context, req *slip.FindByIDRequest) (*s
 	if err != nil {
 		return nil, err
 	}
-	return &slip.FindByIDResponse{URL: h.URL}, nil
+	return &slip.FindByIDResponse{URL: h.ImageURL}, nil
 }

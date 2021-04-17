@@ -2,55 +2,58 @@ package service
 
 import (
 	"context"
+	"image"
 
 	"github.com/payboxth/go-slip/slip"
 )
-
-// New creates new domain1 service
-func New(repo slip.Database, storage slip.Storage) slip.Service {
-	return &service{repo, storage}
-}
 
 type service struct {
 	db      slip.Database
 	storage slip.Storage
 }
 
+// New creates new domain1 service
+func New(repo slip.Database, storage slip.Storage) slip.Service {
+	return &service{repo, storage}
+}
+
 // Create is service create slip body data to repository
 // and convert to slip image
 // and save image to storage
 func (s *service) Create(ctx context.Context, body *slip.Body) (string, string, error) {
-	image, err := NewImage(body)
+	imageByte, err := NewImage(body)
 	if err != nil {
 		return "", "", err
 	}
-
-	path, err := s.storage.SaveFile(ctx, image)
+	// Save image file to Storage
+	path := "image"
+	url, err := s.storage.StoreOriginPNG(ctx, imageByte, path)
 	if err != nil {
 		return "", "", err
 	}
-
-	body.URL = path
+	// Save returned path to body.URL and insert data row to Database
+	body.ImageURL = url
 	id, err := s.db.Insert(ctx, body)
 	if err != nil {
 		return "", "", err
 	}
-	return id, path, nil
+	return id, url, nil
 }
 
+// FindByID function to find slip by id. Return slip.Body and error
 func (s *service) FindByID(ctx context.Context, id string) (*slip.Body, error) {
-	sl, err := s.db.FindByID(ctx, id)
+	body, err := s.db.FindByID(ctx, id)
 	if err != nil {
 		return nil, err
 	}
-	return sl, nil
+	return body, nil
 }
 
-func NewImage(sl *slip.Body) ([]byte, error) {
-	var image []byte
+func NewImage(body *slip.Body) (image.Image, error) {
+	var m image.Image
 	//TODO implement this function
 	// create html template and css
 	// load slip data to html/template
 	// generate and return image []byte in PNG format
-	return image, nil
+	return m, nil
 }

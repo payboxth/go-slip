@@ -13,7 +13,8 @@ func New(s slip.Service) http.Handler {
 	c.s = s
 
 	c.templates = make(map[string]*template.Template)
-	c.templates["index"] = template.Must(template.ParseFiles("template/slip/index.tmpl"))
+	// TODO:
+	// c.templates["index"] = template.Must(template.ParseFiles("template/slip/index.tmpl"))
 
 	mux := http.NewServeMux()
 

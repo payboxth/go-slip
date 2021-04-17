@@ -25,18 +25,26 @@ func main() {
 	// Flush buffered events before the program terminates.
 	defer sentry.Flush(2 * time.Second)
 
-	slipDatabase := sliprepository.NewBolt()
-	slipStorage := sliprepository.NewGCS()
-	slipService := slipservice.New(slipDatabase, slipStorage)
-	slipEndpoint := slipendpoint.New(slipService)
+	database, err := sliprepository.NewBolt("slip.db")
+	if err != nil {
+		log.Fatal(err)
+	}
+	// Create new Google Cloud Storage(GCS) instant with Service Account Key in srcret folder.
+	storage, err := sliprepository.NewGCS("paybox_slip", "./secret/paybox_slip.json")
+	if err != nil {
+		sentry.CaptureMessage(err.Error())
+	}
+	// Create new Slip Service and Endpoint
+	service := slipservice.New(database, storage)
+	endpoint := slipendpoint.New(service)
 
 	mux := http.NewServeMux()
-	mux.Handle("/", sliphandler.New(slipService))
-	mux.Handle("/slip/", http.StripPrefix("/slip", slip.NewHTTPTransport(slipEndpoint)))
+	mux.Handle("/", sliphandler.New(service))
+	mux.Handle("/slip/", http.StripPrefix("/slip", slip.NewHTTPTransport(endpoint)))
 
 	http.ListenAndServe(":8080", mux)
 
-	sentry.CaptureMessage("Go-Slip service is started")
+	sentry.CaptureMessage("Go-Slip service started.")
 	fmt.Println("Go-Slip Service is running...")
 
 }
