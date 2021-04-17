@@ -1,6 +1,7 @@
 package repository_test
 
 import (
+	"fmt"
 	"os"
 	"testing"
 
@@ -8,15 +9,24 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+var (
+	dbFile string = "/slip.db"
+)
+
 func TestNewBoltDB(t *testing.T) {
-	boltdb, err := repository.NewBolt("slip.db")
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		fmt.Printf("User Home Dir is: %v \nError:, %v", homeDir, err)
+	}
+	dbFile = homeDir + dbFile
+	boltdb, err := repository.NewBolt(dbFile)
 	if err != nil {
 		t.Error(err)
 	}
 	assert.NotNil(t, boltdb, "boltdb should not nil")
-	assert.FileExists(t, "slip.db", "Slip database file should be exists")
+	assert.FileExists(t, dbFile, "Slip database file should be exists")
 	// Teardown
-	err = os.Remove("slip.db")
+	err = os.Remove(dbFile)
 	if err != nil {
 		t.Error(err)
 	}

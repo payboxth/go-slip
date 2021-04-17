@@ -12,7 +12,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 
-	sliprepository "github.com/payboxth/go-slip/slip/repository"
+	"github.com/payboxth/go-slip/slip/repository"
 )
 
 var (
@@ -31,7 +31,7 @@ func init() {
 }
 
 func TestNewGCSClient(t *testing.T) {
-	_, err := sliprepository.NewGCS(bucketName, credentialFile)
+	_, err := repository.NewGCS(bucketName, credentialFile)
 	if err != nil {
 		t.Errorf("Repository cannot create Storage Client: %v", err)
 	}
@@ -46,7 +46,7 @@ func TestStoreFile(t *testing.T) {
 	objectName := fmt.Sprintf("%s/%s", folderName, generateName)
 	t.Logf("object = %v", objectName)
 
-	s, err := sliprepository.NewGCS(bucketName, credentialFile)
+	s, err := repository.NewGCS(bucketName, credentialFile)
 	if err != nil {
 		t.Errorf("Repository cannot create Storage Client: %v", err)
 	}
@@ -72,7 +72,7 @@ func TestStoreFile(t *testing.T) {
 }
 
 func TestStoreByte(t *testing.T) {
-	s, err := sliprepository.NewGCS(bucketName, credentialFile)
+	s, err := repository.NewGCS(bucketName, credentialFile)
 	if err != nil {
 		t.Errorf("Repository cannot create Storage Client: %v", err)
 	}
