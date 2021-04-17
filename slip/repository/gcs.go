@@ -100,55 +100,18 @@ func (s *gcs) StoreOriginPNG(ctx context.Context, m image.Image, path string) (n
 	return fileName, s.baseURL + "/" + filePath, nil
 }
 
-func (s *gcs) RemoveFile(ctx context.Context, object string) error {
-	// TODO
-	return nil
-}
-
-// deleteFile removes specified object.
-func deleteFile(w io.Writer, bucket, object string) error {
-	// bucket := "bucket-name"
-	// object := "object-name"
-	ctx := context.Background()
-	client, err := storage.NewClient(ctx)
-	if err != nil {
-		return fmt.Errorf("storage.NewClient: %v", err)
-	}
-	defer client.Close()
-
+func (s *gcs) RemoveFile(ctx context.Context, objectName string) error {
+	o := s.bucket.Object(objectName)
+	w := o.NewWriter(ctx)
+	defer w.Close()
+	w.ACL = append(w.ACL, storage.ACLRule{Entity: storage.AllUsers, Role: storage.RoleReader})
+	w.CacheControl = "public, max-age=31536000"
 	ctx, cancel := context.WithTimeout(ctx, time.Second*10)
 	defer cancel()
 
-	o := client.Bucket(bucket).Object(object)
 	if err := o.Delete(ctx); err != nil {
-		return fmt.Errorf("Object(%q).Delete: %v", object, err)
+		return fmt.Errorf("Object(%q).Delete: %v", objectName, err)
 	}
-	fmt.Fprintf(w, "Blob %v deleted.\n", object)
-	return nil
-}
-
-// copyFile copies an object into specified bucket.
-func copyFile(w io.Writer, dstBucket, srcBucket, srcObject string) error {
-	// dstBucket := "bucket-1"
-	// srcBucket := "bucket-2"
-	// srcObject := "object"
-	ctx := context.Background()
-	client, err := storage.NewClient(ctx)
-	if err != nil {
-		return fmt.Errorf("storage.NewClient: %v", err)
-	}
-	defer client.Close()
-
-	ctx, cancel := context.WithTimeout(ctx, time.Second*10)
-	defer cancel()
-
-	dstObject := srcObject + "-copy"
-	src := client.Bucket(srcBucket).Object(srcObject)
-	dst := client.Bucket(dstBucket).Object(dstObject)
-
-	if _, err := dst.CopierFrom(src).Run(ctx); err != nil {
-		return fmt.Errorf("Object(%q).CopierFrom(%q).Run: %v", dstObject, srcObject, err)
-	}
-	fmt.Fprintf(w, "Blob %v in bucket %v copied to blob %v in bucket %v.\n", srcObject, srcBucket, dstObject, dstBucket)
+	fmt.Fprintf(w, "Blob %v deleted.\n", objectName)
 	return nil
 }

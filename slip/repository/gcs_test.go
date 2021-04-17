@@ -11,6 +11,13 @@ import (
 	sliprepository "github.com/payboxth/go-slip/slip/repository"
 )
 
+var (
+	bucketName string = "paybox_slip"
+	secretPath string = "/Users/tom/secret/paybox_slip.json"
+	fileName   string = "test_slip.png"
+	folderName string = "test"
+)
+
 func TestNewGCSClient(t *testing.T) {
 	_, err := sliprepository.NewGCS("paybox_slip", "/Users/tom/secret/paybox_slip.json")
 	if err != nil {
@@ -23,11 +30,6 @@ func TestNewGCSClient(t *testing.T) {
 // ตอนนี้ยังเอาไว้ทำ integration test
 // TODO แต่ถ้าปล่อย package นี้เป็น lib opensource จริงคงต้องแยกทำ mock ไว้ เทสกันด้วย
 func TestStoreFile_URLMustContainPath(t *testing.T) {
-	expected := "https://storage.googleapis.com/paybox_slip/test/"
-	bucketName := "paybox_slip"
-	secretPath := "/Users/tom/secret/paybox_slip.json"
-	fileName := "test_slip.png"
-	folderName := "test"
 	generateName := uuid.New().String()
 	objectName := fmt.Sprintf("%s/%s", folderName, generateName)
 	t.Logf("object = %v", objectName)
@@ -38,18 +40,20 @@ func TestStoreFile_URLMustContainPath(t *testing.T) {
 	}
 
 	ctx := context.Background()
+
 	url, err := s.StoreFile(ctx, fileName, objectName)
 	if err != nil {
 		t.Fatalf("Error on s.SaveFile: %v", err)
 	}
 
+	expected := "https://storage.googleapis.com/paybox_slip/test/"
 	assert.Containsf(t, url, expected, "Return URL does not contain ecpected = %v", url)
 	assert.NotZerof(t, url, "URL is not empty as: %v", url)
 	t.Logf("Success storage save file and return fileName = %v URL = %v", fileName, url)
-	// Teardown by delete saved file
 
+	// Teardown by delete saved file
 	err = s.RemoveFile(ctx, objectName)
 	if err != nil {
-		t.Errorf("cannot teardown by delete saved file")
+		t.Errorf("cannot teardown by delete saved file: %v", err)
 	}
 }
