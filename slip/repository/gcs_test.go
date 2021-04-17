@@ -29,8 +29,8 @@ func TestStoreFile_URLMustContainPath(t *testing.T) {
 	fileName := "test_slip.png"
 	folderName := "test"
 	generateName := uuid.New().String()
-	object := fmt.Sprintf("%s/%s", folderName, generateName)
-	t.Logf("object = %v", object)
+	objectName := fmt.Sprintf("%s/%s", folderName, generateName)
+	t.Logf("object = %v", objectName)
 
 	s, err := sliprepository.NewGCS(bucketName, secretPath)
 	if err != nil {
@@ -38,7 +38,7 @@ func TestStoreFile_URLMustContainPath(t *testing.T) {
 	}
 
 	ctx := context.Background()
-	url, err := s.StoreFile(ctx, fileName, object)
+	url, err := s.StoreFile(ctx, fileName, objectName)
 	if err != nil {
 		t.Fatalf("Error on s.SaveFile: %v", err)
 	}
@@ -48,7 +48,7 @@ func TestStoreFile_URLMustContainPath(t *testing.T) {
 	t.Logf("Success storage save file and return fileName = %v URL = %v", fileName, url)
 	// Teardown by delete saved file
 
-	err = s.RemoveFile(ctx, object)
+	err = s.RemoveFile(ctx, objectName)
 	if err != nil {
 		t.Errorf("cannot teardown by delete saved file")
 	}

@@ -44,9 +44,8 @@ func encodePNG(w io.Writer, m image.Image) error {
 	return png.Encode(w, m)
 }
 
-func (s *gcs) StoreFile(ctx context.Context, fileName, object string) (url string, err error) {
-
-	o := s.bucket.Object(object)
+func (s *gcs) StoreFile(ctx context.Context, fileName, objectName string) (url string, err error) {
+	o := s.bucket.Object(objectName)
 	w := o.NewWriter(ctx)
 	defer func() {
 		err := w.Close()
@@ -71,14 +70,14 @@ func (s *gcs) StoreFile(ctx context.Context, fileName, object string) (url strin
 		return "", err
 	}
 
-	return s.baseURL + "/" + object, nil
+	return s.baseURL + "/" + objectName, nil
 }
 
 func (s *gcs) StoreOriginPNG(ctx context.Context, m image.Image, path string) (name, url string, err error) {
 	fileName := s.generateName() + ".png"
 	filePath := fmt.Sprintf("%s/%s", path, fileName)
-	obj := s.bucket.Object(filePath)
-	w := obj.NewWriter(ctx)
+	o := s.bucket.Object(filePath)
+	w := o.NewWriter(ctx)
 
 	defer func() {
 		err := w.Close()
@@ -91,7 +90,7 @@ func (s *gcs) StoreOriginPNG(ctx context.Context, m image.Image, path string) (n
 	w.CacheControl = "public, max-age=31536000"
 	err = encodePNG(w, m)
 	if err != nil {
-		objErr := obj.Delete(ctx)
+		objErr := o.Delete(ctx)
 		if objErr != nil {
 			return "", "", err
 		}
