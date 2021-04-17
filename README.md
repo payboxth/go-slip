@@ -14,8 +14,11 @@ Mobile Client or Caller service make a RESTful API call for NewSlip() function a
 sequenceDiagram;
   participant Caller
   participant Service
-  Caller->>Service: NewSlip()
-  Note over Service: Create slip file on server
+  participant GCS
+  Caller->>Service: Create Slip (json)
+  Note over Service: Create slip file image
+  Service->>GCS: Store image (png)
+  GCS->>Service: Success
   Service->>Caller: Slip URL
 ```
 
