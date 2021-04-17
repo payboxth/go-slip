@@ -73,6 +73,27 @@ func (s *gcs) StoreFile(ctx context.Context, fileName, objectName string) (url s
 	return s.baseURL + "/" + objectName, nil
 }
 
+func (s *gcs) StoreByte(ctx context.Context, b []byte, objectName string) (url string, err error) {
+	o := s.bucket.Object(objectName)
+	w := o.NewWriter(ctx)
+	defer w.Close()
+	w.ACL = append(w.ACL, storage.ACLRule{Entity: storage.AllUsers, Role: storage.RoleReader})
+	w.CacheControl = "public, max-age=31536000"
+	ctx, cancel := context.WithTimeout(ctx, time.Second*10)
+	defer cancel()
+
+	n, err := w.Write(b)
+	if err != nil {
+		objErr := o.Delete(ctx)
+		if objErr != nil {
+			fmt.Printf("Delete object error: %v", objErr)
+		}
+		return "", err
+	}
+	fmt.Printf("StoreByte write %v byte.", n)
+	return s.baseURL + "/" + objectName, nil
+}
+
 func (s *gcs) StoreOriginPNG(ctx context.Context, m image.Image, objectName string) (url string, err error) {
 	o := s.bucket.Object(objectName)
 	w := o.NewWriter(ctx)
@@ -112,25 +133,4 @@ func (s *gcs) RemoveFile(ctx context.Context, objectName string) error {
 	}
 	fmt.Fprintf(w, "Blob %v deleted.\n", objectName)
 	return nil
-}
-
-func (s *gcs) StoreByte(ctx context.Context, b []byte, objectName string) (url string, err error) {
-	o := s.bucket.Object(objectName)
-	w := o.NewWriter(ctx)
-	defer w.Close()
-	w.ACL = append(w.ACL, storage.ACLRule{Entity: storage.AllUsers, Role: storage.RoleReader})
-	w.CacheControl = "public, max-age=31536000"
-	ctx, cancel := context.WithTimeout(ctx, time.Second*10)
-	defer cancel()
-
-	n, err := w.Write(b)
-	if err != nil {
-		objErr := o.Delete(ctx)
-		if objErr != nil {
-			fmt.Printf("Delete object error: %v", objErr)
-		}
-		return "", err
-	}
-	fmt.Printf("StoreByte write %v byte.", n)
-	return s.baseURL + "/" + objectName, nil
 }

@@ -16,14 +16,22 @@ import (
 )
 
 var (
-	bucketName string = "paybox_slip"
-	secretPath string = "/Users/tom/secret/paybox_slip.json"
-	fileName   string = "test_slip.png"
-	folderName string = "test"
+	bucketName     string = "paybox_slip"
+	credentialFile string = "/secret/paybox_slip.json"
+	fileName       string = "test_slip.png"
+	folderName     string = "test"
 )
 
+func init() {
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		fmt.Printf("User Home Dir is: %v \nError:, %v", homeDir, err)
+	}
+	credentialFile = homeDir + credentialFile
+}
+
 func TestNewGCSClient(t *testing.T) {
-	_, err := sliprepository.NewGCS("paybox_slip", "/Users/tom/secret/paybox_slip.json")
+	_, err := sliprepository.NewGCS(bucketName, credentialFile)
 	if err != nil {
 		t.Errorf("Repository cannot create Storage Client: %v", err)
 	}
@@ -38,7 +46,7 @@ func TestStoreFile(t *testing.T) {
 	objectName := fmt.Sprintf("%s/%s", folderName, generateName)
 	t.Logf("object = %v", objectName)
 
-	s, err := sliprepository.NewGCS(bucketName, secretPath)
+	s, err := sliprepository.NewGCS(bucketName, credentialFile)
 	if err != nil {
 		t.Errorf("Repository cannot create Storage Client: %v", err)
 	}
@@ -60,10 +68,11 @@ func TestStoreFile(t *testing.T) {
 	if err != nil {
 		t.Errorf("cannot teardown by delete saved file: %v", err)
 	}
+	t.Logf("Teardown by delete file: %v", objectName)
 }
 
 func TestStoreByte(t *testing.T) {
-	s, err := sliprepository.NewGCS(bucketName, secretPath)
+	s, err := sliprepository.NewGCS(bucketName, credentialFile)
 	if err != nil {
 		t.Errorf("Repository cannot create Storage Client: %v", err)
 	}
@@ -80,6 +89,7 @@ func TestStoreByte(t *testing.T) {
 	if format != "png" {
 		t.Errorf("file format is not png but: %v", format)
 	}
+	t.Logf("file format is: %v", format)
 	buf := new(bytes.Buffer)
 	err = png.Encode(buf, m)
 	if err != nil {
@@ -87,11 +97,18 @@ func TestStoreByte(t *testing.T) {
 	}
 	b := buf.Bytes()
 	generateName := uuid.New().String()
-	objectName := fmt.Sprintf("%s/%s/%s", folderName, generateName, ".png")
+	objectName := fmt.Sprintf("%s/%s.%s", folderName, generateName, "png")
+	t.Logf("objectName = %v", objectName)
 	url, err := s.StoreByte(ctx, b, objectName)
 	if err != nil {
 		assert.NotNilf(t, err, "Error on s.StoreByte(): %v", err)
 	}
-	t.Logf("Success storage save file and return URL = %v", url)
+	t.Logf("Success storage save byte and return URL = %v", url)
 
+	// Teardown by delete saved file
+	err = s.RemoveFile(ctx, objectName)
+	if err != nil {
+		t.Errorf("cannot teardown by delete saved file: %v", err)
+	}
+	t.Logf("Teardown by delete file: %v", objectName)
 }
