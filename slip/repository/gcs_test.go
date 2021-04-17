@@ -1,8 +1,12 @@
 package repository_test
 
 import (
+	"bytes"
 	"context"
 	"fmt"
+	"image"
+	"image/png"
+	"os"
 	"testing"
 
 	"github.com/google/uuid"
@@ -29,7 +33,7 @@ func TestNewGCSClient(t *testing.T) {
 // ตอนรันเทส ต้องเอา paybox_slip.json ไปใส่ด้วยนะ อยู่ใน slip/repository/secret
 // ตอนนี้ยังเอาไว้ทำ integration test
 // TODO แต่ถ้าปล่อย package นี้เป็น lib opensource จริงคงต้องแยกทำ mock ไว้ เทสกันด้วย
-func TestStoreFile_URLMustContainPath(t *testing.T) {
+func TestStoreFile(t *testing.T) {
 	generateName := uuid.New().String()
 	objectName := fmt.Sprintf("%s/%s", folderName, generateName)
 	t.Logf("object = %v", objectName)
@@ -43,7 +47,7 @@ func TestStoreFile_URLMustContainPath(t *testing.T) {
 
 	url, err := s.StoreFile(ctx, fileName, objectName)
 	if err != nil {
-		t.Fatalf("Error on s.SaveFile: %v", err)
+		t.Fatalf("Error on s.StoreFile: %v", err)
 	}
 
 	expected := "https://storage.googleapis.com/paybox_slip/test/"
@@ -56,4 +60,38 @@ func TestStoreFile_URLMustContainPath(t *testing.T) {
 	if err != nil {
 		t.Errorf("cannot teardown by delete saved file: %v", err)
 	}
+}
+
+func TestStoreByte(t *testing.T) {
+	s, err := sliprepository.NewGCS(bucketName, secretPath)
+	if err != nil {
+		t.Errorf("Repository cannot create Storage Client: %v", err)
+	}
+
+	ctx := context.Background()
+	inputFile, err := os.Open(fileName)
+	if err != nil {
+		panic(err)
+	}
+	m, format, err := image.Decode(inputFile)
+	if err != nil {
+		t.Errorf("image.Decode error = %v", err)
+	}
+	if format != "png" {
+		t.Errorf("file format is not png but: %v", format)
+	}
+	buf := new(bytes.Buffer)
+	err = png.Encode(buf, m)
+	if err != nil {
+		t.Errorf("Error while png.Encode() = %v", err)
+	}
+	b := buf.Bytes()
+	generateName := uuid.New().String()
+	objectName := fmt.Sprintf("%s/%s/%s", folderName, generateName, ".png")
+	url, err := s.StoreByte(ctx, b, objectName)
+	if err != nil {
+		assert.NotNilf(t, err, "Error on s.StoreByte(): %v", err)
+	}
+	t.Logf("Success storage save file and return URL = %v", url)
+
 }
