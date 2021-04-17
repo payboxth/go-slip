@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/getsentry/sentry-go"
@@ -13,6 +14,12 @@ import (
 	sliphandler "github.com/payboxth/go-slip/slip/handler"
 	sliprepository "github.com/payboxth/go-slip/slip/repository"
 	slipservice "github.com/payboxth/go-slip/slip/service"
+)
+
+var (
+	bucketName     string = "paybox_slip"
+	credentialFile string = "/secret/paybox_slip_key.json"
+	folderName     string = "image"
 )
 
 func main() {
@@ -29,8 +36,14 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		sentry.CaptureMessage("Error from os.UserHomeDir():" + err.Error())
+	}
+	credentialFile = homeDir + credentialFile
 	// Create new Google Cloud Storage(GCS) instant with Service Account Key in srcret folder.
-	storage, err := sliprepository.NewGCS("paybox_slip", "./secret/paybox_slip.json")
+	storage, err := sliprepository.NewGCS(bucketName, credentialFile)
 	if err != nil {
 		sentry.CaptureMessage(err.Error())
 	}
@@ -46,5 +59,4 @@ func main() {
 
 	sentry.CaptureMessage("Go-Slip service started.")
 	fmt.Println("Go-Slip Service is running...")
-
 }

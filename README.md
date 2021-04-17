@@ -26,7 +26,9 @@ sequenceDiagram;
 
 1. Create Google Cloud Storage - new Bucket such as "paybox_slip" as you see in "/slip/repository/gcs_test.go"
 
-1. Create your Google Cloud - Service Account and place in "$HOME/secret/" as paybox_slip.json then just run...
+1. Create your Google Cloud - Service Account and place in "$HOME/secret/" and rename as paybox_slip_key.json 
+
+1. then just run...
 
 ```bash
 go test -v .

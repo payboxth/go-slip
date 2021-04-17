@@ -17,7 +17,7 @@ import (
 
 var (
 	bucketName     string = "paybox_slip"
-	credentialFile string = "/secret/paybox_slip.json"
+	credentialFile string = "/secret/paybox_slip_key.json"
 	fileName       string = "test_slip.png"
 	folderName     string = "test"
 )
