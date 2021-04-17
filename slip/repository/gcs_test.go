@@ -16,14 +16,22 @@ import (
 )
 
 var (
-	bucketName string = "paybox_slip"
-	secretPath string = "/Users/tom/secret/paybox_slip.json"
-	fileName   string = "test_slip.png"
-	folderName string = "test"
+	bucketName     string = "paybox_slip"
+	credentialFile string = "/secret/paybox_slip.json"
+	fileName       string = "test_slip.png"
+	folderName     string = "test"
 )
 
+func init() {
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		fmt.Printf("User Home Dir is: %v \nError:, %v", homeDir, err)
+	}
+	credentialFile = homeDir + credentialFile
+}
+
 func TestNewGCSClient(t *testing.T) {
-	_, err := sliprepository.NewGCS("paybox_slip", "/Users/tom/secret/paybox_slip.json")
+	_, err := sliprepository.NewGCS(bucketName, credentialFile)
 	if err != nil {
 		t.Errorf("Repository cannot create Storage Client: %v", err)
 	}
@@ -38,7 +46,7 @@ func TestStoreFile(t *testing.T) {
 	objectName := fmt.Sprintf("%s/%s", folderName, generateName)
 	t.Logf("object = %v", objectName)
 
-	s, err := sliprepository.NewGCS(bucketName, secretPath)
+	s, err := sliprepository.NewGCS(bucketName, credentialFile)
 	if err != nil {
 		t.Errorf("Repository cannot create Storage Client: %v", err)
 	}
@@ -64,7 +72,7 @@ func TestStoreFile(t *testing.T) {
 }
 
 func TestStoreByte(t *testing.T) {
-	s, err := sliprepository.NewGCS(bucketName, secretPath)
+	s, err := sliprepository.NewGCS(bucketName, credentialFile)
 	if err != nil {
 		t.Errorf("Repository cannot create Storage Client: %v", err)
 	}

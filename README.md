@@ -18,3 +18,19 @@ sequenceDiagram;
   Note over Service: Create slip file on server
   Service->>Caller: Slip URL
 ```
+
+# How to test.
+
+1. Create Google Cloud Storage - new Bucket such as "paybox_slip" as you see in "/slip/repository/gcs_test.go"
+
+1. Create your Google Cloud - Service Account and place in "$HOME/secret/" as paybox_slip.json then just run...
+
+```bash
+go test -v .
+```
+
+or to test just some package.
+
+```bash
+go test -v ./slip/repository
+```
