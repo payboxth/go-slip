@@ -8,13 +8,13 @@ import (
 
 // SlipDatabase is the mock struct for domain1 repository
 type SlipDatabase struct {
-	CreateFunc   func(ctx context.Context, b *slip.Body) (string, error)
+	InsertFunc   func(ctx context.Context, body *slip.Body) (string, error)
 	FindByIDFunc func(ctx context.Context, id string) (*slip.Body, error)
 }
 
 // Register calls RegisterFunc
-func (r *SlipDatabase) Create(ctx context.Context, b *slip.Body) (string, error) {
-	return r.CreateFunc(ctx, b)
+func (r *SlipDatabase) Insert(ctx context.Context, body *slip.Body) (string, error) {
+	return r.InsertFunc(ctx, body)
 }
 
 // FindByID calls FindByID func
