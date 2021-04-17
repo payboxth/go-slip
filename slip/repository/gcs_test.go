@@ -1,6 +1,7 @@
 package repository_test
 
 import (
+	"context"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -25,7 +26,8 @@ func TestSaveFile_URLMustContainPath(t *testing.T) {
 	if err != nil {
 		t.Errorf("Repository cannot create Storage Client: %v", err)
 	}
-	url, err := s.SaveFile("test_slip.png", "test")
+	ctx := context.Background()
+	url, err := s.SaveFile(ctx, "test_slip.png", "test")
 	if err != nil {
 		t.Fatalf("Error on s.SaveFile: %v", err)
 	}

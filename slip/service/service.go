@@ -20,12 +20,13 @@ type service struct {
 // and convert to slip image
 // and save image to storage
 func (s *service) Create(ctx context.Context, body *slip.Body) (string, string, error) {
-	image, err := NewImage(body)
+	imageByte, err := NewImage(body)
 	if err != nil {
 		return "", "", err
 	}
 	// Save image file to Storage
-	url, err := s.storage.SaveFile(ctx, image)
+	path := "image"
+	url, err := s.storage.SaveFile(ctx, imageByte, path)
 	if err != nil {
 		return "", "", err
 	}
