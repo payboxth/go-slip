@@ -60,6 +60,7 @@ func TestStoreFile(t *testing.T) {
 	if err != nil {
 		t.Errorf("cannot teardown by delete saved file: %v", err)
 	}
+	t.Logf("Teardown by delete file: %v", objectName)
 }
 
 func TestStoreByte(t *testing.T) {
@@ -80,6 +81,7 @@ func TestStoreByte(t *testing.T) {
 	if format != "png" {
 		t.Errorf("file format is not png but: %v", format)
 	}
+	t.Logf("file format is: %v", format)
 	buf := new(bytes.Buffer)
 	err = png.Encode(buf, m)
 	if err != nil {
@@ -87,11 +89,18 @@ func TestStoreByte(t *testing.T) {
 	}
 	b := buf.Bytes()
 	generateName := uuid.New().String()
-	objectName := fmt.Sprintf("%s/%s/%s", folderName, generateName, ".png")
+	objectName := fmt.Sprintf("%s/%s.%s", folderName, generateName, "png")
+	t.Logf("objectName = %v", objectName)
 	url, err := s.StoreByte(ctx, b, objectName)
 	if err != nil {
 		assert.NotNilf(t, err, "Error on s.StoreByte(): %v", err)
 	}
-	t.Logf("Success storage save file and return URL = %v", url)
+	t.Logf("Success storage save byte and return URL = %v", url)
 
+	// Teardown by delete saved file
+	err = s.RemoveFile(ctx, objectName)
+	if err != nil {
+		t.Errorf("cannot teardown by delete saved file: %v", err)
+	}
+	t.Logf("Teardown by delete file: %v", objectName)
 }
