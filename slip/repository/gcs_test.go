@@ -18,7 +18,7 @@ import (
 var (
 	bucketName     string = "paybox_slip"
 	credentialFile string = "/secret/paybox_slip_key.json"
-	fileName       string = "test_slip.png"
+	testFile       string = "test_slip.png"
 	folderName     string = "test"
 )
 
@@ -53,7 +53,7 @@ func TestStoreFile(t *testing.T) {
 
 	ctx := context.Background()
 
-	url, err := s.StoreFile(ctx, fileName, objectName)
+	url, err := s.StoreFile(ctx, testFile, objectName)
 	if err != nil {
 		t.Fatalf("Error on s.StoreFile: %v", err)
 	}
@@ -61,7 +61,7 @@ func TestStoreFile(t *testing.T) {
 	expected := "https://storage.googleapis.com/paybox_slip/test/"
 	assert.Containsf(t, url, expected, "Return URL does not contain ecpected = %v", url)
 	assert.NotZerof(t, url, "URL is not empty as: %v", url)
-	t.Logf("Success storage save file and return fileName = %v URL = %v", fileName, url)
+	t.Logf("Success storage save file and return fileName = %v URL = %v", testFile, url)
 
 	// Teardown by delete saved file
 	err = s.RemoveFile(ctx, objectName)
@@ -78,7 +78,7 @@ func TestStoreByte(t *testing.T) {
 	}
 
 	ctx := context.Background()
-	inputFile, err := os.Open(fileName)
+	inputFile, err := os.Open(testFile)
 	if err != nil {
 		panic(err)
 	}
