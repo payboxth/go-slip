@@ -66,24 +66,17 @@ func (s *SlipLib) UploadToGCLOUD(_byte []byte) (url *string, err error) {
 	}
 
 	newUUID, err := uuid.NewV4()
-
 	if err != nil {
 		return nil, err
 	}
-	randomKey := strings.Replace(newUUID.String(), "-", "", -1)
-	filename := randomKey + ".jpg"
+	filename := strings.Replace(newUUID.String(), "-", "", -1) + ".jpg"
 	obj := bh.Object(filename)
 	w := obj.NewWriter(ctx)
 	buf := bytes.NewBuffer(nil)
-	// var b bytes.Buffer
 
-	// Write strings to the Buffer.
-	// b.WriteString(txt)
 	buf.Write(_byte)
 	w.ACL = append(w.ACL, storage.ACLRule{Entity: storage.AllUsers, Role: storage.RoleReader})
 	w.CacheControl = "public, max-age=31536000"
-	// pdfg.SetOutput(w)
-	// pdfg.SetStderr(w)
 	if _, err := io.Copy(w, buf); err != nil {
 		return nil, err
 	}
