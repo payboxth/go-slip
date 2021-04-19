@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 
-	"github.com/payboxth/go-slip/slip"
+	"github.com/payboxth/go-slip"
 )
 
 func NewSqlite() slip.Database {

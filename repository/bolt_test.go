@@ -4,11 +4,12 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"reflect"
 	"testing"
 	"time"
 
-	"github.com/payboxth/go-slip/slip"
-	"github.com/payboxth/go-slip/slip/repository"
+	"github.com/payboxth/go-slip"
+	"github.com/payboxth/go-slip/repository"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -51,7 +52,7 @@ func TestDB_Insert(t *testing.T) {
 	}
 	dbFile = homeDir + dbFile
 
-	boltdb, err := repository.NewBolt(dbFile)
+	bolt, err := repository.NewBolt(dbFile)
 	if err != nil {
 		t.Error(err)
 	}
@@ -78,12 +79,12 @@ func TestDB_Insert(t *testing.T) {
 		DocDate:    "93993",
 		RefNumber:  "00001",
 		Title:      "MakeKAFE",
-		CreateDate: time.Now(),
+		CreateDate: time.Now().Format(time.RFC3339),
 		Lines:      lines,
 	}
 	ctx := context.Background()
 
-	id, err := boltdb.Insert(ctx, body)
+	id, err := bolt.Insert(ctx, body)
 	if err != nil {
 		t.Errorf("boltdb.Insert error: %v", err)
 	}
@@ -97,3 +98,66 @@ func TestDB_Insert(t *testing.T) {
 }
 
 // TestDB_FindByID()
+func TestDB_FindByID(t *testing.T) {
+	// Setup
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		fmt.Printf("User Home Dir is: %v \nError:, %v", homeDir, err)
+	}
+	dbFile = homeDir + dbFile
+
+	bolt, err := repository.NewBolt(dbFile)
+	if err != nil {
+		t.Error(err)
+	}
+	t.Logf("Open boltDB as: %v", bolt)
+
+	lines := []slip.Line{
+		{
+			LineNumber:  1,
+			SKU:         "123456",
+			Description: "Product Name1",
+			Quantity:    1.0,
+			Price:       100,
+			Note:        "",
+		},
+		{
+			LineNumber:  2,
+			SKU:         "78910",
+			Description: "Product Name2",
+			Quantity:    2.0,
+			Price:       50,
+			Note:        "Test Note",
+		},
+	}
+	bodyIn := &slip.Body{
+		DocNumber:  "101010",
+		DocDate:    "93993",
+		RefNumber:  "00001",
+		Title:      "MakeKAFE",
+		CreateDate: time.Now().Format(time.RFC3339),
+		Lines:      lines,
+	}
+	ctx := context.Background()
+
+	id, err := bolt.Insert(ctx, bodyIn)
+	if err != nil {
+		t.Errorf("boltdb.Insert error: %v", err)
+	}
+	assert.NotEmptyf(t, id, "boltdb.Insert() return id should not empty as: %v", id)
+	t.Logf("id = %v", id)
+
+	bodyOut, err := bolt.FindByID(ctx, id)
+	if err != nil {
+		t.Errorf("boltdb.FindByID error: %v", err)
+	}
+	if !reflect.DeepEqual(bodyIn, bodyOut) {
+		t.Errorf("boltdb.FindByID\n   bodyIn : %v\n !=bodyOut: %v", bodyIn, bodyOut)
+	}
+
+	// Teardown
+	err = os.Remove(dbFile)
+	if err != nil {
+		t.Errorf("Teardown error when remove dbFile: %v", err)
+	}
+}

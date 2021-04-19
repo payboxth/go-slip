@@ -13,7 +13,7 @@ import (
 	"github.com/google/uuid"
 	"google.golang.org/api/option"
 
-	"github.com/payboxth/go-slip/slip"
+	"github.com/payboxth/go-slip"
 )
 
 func NewGCS(bucketName, credentialFile string) (slip.Storage, error) {
