@@ -12,12 +12,12 @@ import (
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/payboxth/go-slip/slip/repository"
+	"github.com/payboxth/go-slip/repository"
 )
 
 var (
 	bucketName     string = "paybox_slip"
-	credentialFile string = "/secret/paybox_slip_key.json"
+	credentialFile string = "/secret/paybox_slip_storage_key.json"
 	testFile       string = "test_slip.png"
 	folderName     string = "test"
 )

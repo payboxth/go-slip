@@ -8,7 +8,7 @@ import (
 
 	bolt "go.etcd.io/bbolt"
 
-	"github.com/payboxth/go-slip/slip"
+	"github.com/payboxth/go-slip"
 )
 
 func NewBolt(fileName string) (slip.Database, error) {
@@ -30,7 +30,6 @@ type boltDB struct {
 
 // Insert is method for create new record in slip.db in bucket "slips"
 func (b boltDB) Insert(ctx context.Context, body *slip.Body) (id string, err error) {
-	defer b.db.Close()
 	err = b.db.Update(func(tx *bolt.Tx) error {
 		bucket, err := tx.CreateBucketIfNotExists([]byte("slips"))
 		if err != nil {
@@ -46,29 +45,32 @@ func (b boltDB) Insert(ctx context.Context, body *slip.Body) (id string, err err
 		err = bucket.Put([]byte(body.ID), encoded)
 		return err
 	})
+	if err != nil {
+		return "", err
+	}
 	return body.ID, nil
 }
 
 // FindByID is method to get slip body by slip ID
-func (boltDB) FindByID(ctx context.Context, id string) (*slip.Body, error) {
+func (b boltDB) FindByID(ctx context.Context, id string) (*slip.Body, error) {
 	// TODO: not sure to use bolt.Open here?
-	db, err := bolt.Open("slip.db", 0600, &bolt.Options{Timeout: 1 * time.Second})
-	if err != nil {
-		return nil, err
-	}
-	defer db.Close()
-	body := &slip.Body{}
-	err = db.View(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte("slips"))
-		if err != nil {
-			return err
-		}
-		v := b.Get([]byte(id))
-		err := json.Unmarshal(v, body)
+	// db, err := bolt.Open("slip.db", 0600, &bolt.Options{Timeout: 1 * time.Second})
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// defer db.Close()
+	body := slip.Body{}
+	err := b.db.View(func(tx *bolt.Tx) error {
+		bucket := tx.Bucket([]byte("slips"))
+		v := bucket.Get([]byte(id))
+		err := json.Unmarshal(v, &body)
 		if err != nil {
 			return err
 		}
 		return nil
 	})
-	return body, nil
+	if err != nil {
+		return nil, err
+	}
+	return &body, nil
 }

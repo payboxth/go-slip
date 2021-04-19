@@ -3,7 +3,7 @@ package mock
 import (
 	"context"
 
-	"github.com/payboxth/go-slip/slip"
+	"github.com/payboxth/go-slip"
 )
 
 // SlipDatabase is the mock struct for domain1 repository

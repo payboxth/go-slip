@@ -4,7 +4,7 @@ import (
 	"html/template"
 	"net/http"
 
-	"github.com/payboxth/go-slip/slip"
+	"github.com/payboxth/go-slip"
 )
 
 // New creates new slip handler

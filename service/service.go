@@ -4,7 +4,7 @@ import (
 	"context"
 	"image"
 
-	"github.com/payboxth/go-slip/slip"
+	"github.com/payboxth/go-slip"
 )
 
 type service struct {

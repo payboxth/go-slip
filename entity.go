@@ -1,7 +1,5 @@
 package slip
 
-import "time"
-
 type Body struct {
 	ID          string
 	DocDate     string
@@ -11,7 +9,7 @@ type Body struct {
 	Total       float32
 	ImageURL    string
 	AccessToken string
-	CreateDate  time.Time
+	CreateDate  string
 	Lines       []Line
 }
 
