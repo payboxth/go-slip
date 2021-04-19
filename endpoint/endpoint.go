@@ -3,7 +3,7 @@ package endpoint
 import (
 	"context"
 
-	"github.com/payboxth/go-slip/slip"
+	"github.com/payboxth/go-slip"
 )
 
 // New creates new domain1 endpoint

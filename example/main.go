@@ -9,11 +9,11 @@ import (
 
 	"github.com/getsentry/sentry-go"
 
-	"github.com/payboxth/go-slip/slip"
-	slipendpoint "github.com/payboxth/go-slip/slip/endpoint"
-	sliphandler "github.com/payboxth/go-slip/slip/handler"
-	sliprepository "github.com/payboxth/go-slip/slip/repository"
-	slipservice "github.com/payboxth/go-slip/slip/service"
+	"github.com/payboxth/go-slip"
+	slipendpoint "github.com/payboxth/go-slip/endpoint"
+	sliphandler "github.com/payboxth/go-slip/handler"
+	sliprepository "github.com/payboxth/go-slip/repository"
+	slipservice "github.com/payboxth/go-slip/service"
 )
 
 var (

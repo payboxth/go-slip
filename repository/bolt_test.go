@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/payboxth/go-slip/slip"
-	"github.com/payboxth/go-slip/slip/repository"
+	"github.com/payboxth/go-slip"
+	"github.com/payboxth/go-slip/repository"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -52,7 +52,7 @@ func TestDB_Insert(t *testing.T) {
 	}
 	dbFile = homeDir + dbFile
 
-	boltdb, err := repository.NewBolt(dbFile)
+	bolt, err := repository.NewBolt(dbFile)
 	if err != nil {
 		t.Error(err)
 	}
@@ -84,7 +84,7 @@ func TestDB_Insert(t *testing.T) {
 	}
 	ctx := context.Background()
 
-	id, err := boltdb.Insert(ctx, body)
+	id, err := bolt.Insert(ctx, body)
 	if err != nil {
 		t.Errorf("boltdb.Insert error: %v", err)
 	}

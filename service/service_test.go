@@ -7,9 +7,9 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
+	"github.com/payboxth/go-slip"
 	"github.com/payboxth/go-slip/mock"
-	"github.com/payboxth/go-slip/slip"
-	"github.com/payboxth/go-slip/slip/service"
+	"github.com/payboxth/go-slip/service"
 )
 
 func TestServiceCreateDatabase(t *testing.T) {
