@@ -4,10 +4,11 @@ import "time"
 
 type Body struct {
 	ID          string
+	DocDate     string
 	DocNumber   string
 	RefNumber   string
 	Title       string
-	DocDate     string
+	Total       float32
 	ImageURL    string
 	AccessToken string
 	CreateDate  time.Time

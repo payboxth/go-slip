@@ -123,8 +123,6 @@ func (s *gcs) RemoveFile(ctx context.Context, objectName string) error {
 	o := s.bucket.Object(objectName)
 	w := o.NewWriter(ctx)
 	defer w.Close()
-	w.ACL = append(w.ACL, storage.ACLRule{Entity: storage.AllUsers, Role: storage.RoleReader})
-	w.CacheControl = "public, max-age=31536000"
 	ctx, cancel := context.WithTimeout(ctx, time.Second*10)
 	defer cancel()
 

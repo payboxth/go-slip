@@ -12,13 +12,13 @@ import (
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 
-	sliprepository "github.com/payboxth/go-slip/slip/repository"
+	"github.com/payboxth/go-slip/slip/repository"
 )
 
 var (
 	bucketName     string = "paybox_slip"
-	credentialFile string = "/secret/paybox_slip.json"
-	fileName       string = "test_slip.png"
+	credentialFile string = "/secret/paybox_slip_key.json"
+	testFile       string = "test_slip.png"
 	folderName     string = "test"
 )
 
@@ -31,7 +31,7 @@ func init() {
 }
 
 func TestNewGCSClient(t *testing.T) {
-	_, err := sliprepository.NewGCS(bucketName, credentialFile)
+	_, err := repository.NewGCS(bucketName, credentialFile)
 	if err != nil {
 		t.Errorf("Repository cannot create Storage Client: %v", err)
 	}
@@ -46,14 +46,14 @@ func TestStoreFile(t *testing.T) {
 	objectName := fmt.Sprintf("%s/%s", folderName, generateName)
 	t.Logf("object = %v", objectName)
 
-	s, err := sliprepository.NewGCS(bucketName, credentialFile)
+	s, err := repository.NewGCS(bucketName, credentialFile)
 	if err != nil {
 		t.Errorf("Repository cannot create Storage Client: %v", err)
 	}
 
 	ctx := context.Background()
 
-	url, err := s.StoreFile(ctx, fileName, objectName)
+	url, err := s.StoreFile(ctx, testFile, objectName)
 	if err != nil {
 		t.Fatalf("Error on s.StoreFile: %v", err)
 	}
@@ -61,7 +61,7 @@ func TestStoreFile(t *testing.T) {
 	expected := "https://storage.googleapis.com/paybox_slip/test/"
 	assert.Containsf(t, url, expected, "Return URL does not contain ecpected = %v", url)
 	assert.NotZerof(t, url, "URL is not empty as: %v", url)
-	t.Logf("Success storage save file and return fileName = %v URL = %v", fileName, url)
+	t.Logf("Success storage save file and return fileName = %v URL = %v", testFile, url)
 
 	// Teardown by delete saved file
 	err = s.RemoveFile(ctx, objectName)
@@ -72,13 +72,13 @@ func TestStoreFile(t *testing.T) {
 }
 
 func TestStoreByte(t *testing.T) {
-	s, err := sliprepository.NewGCS(bucketName, credentialFile)
+	s, err := repository.NewGCS(bucketName, credentialFile)
 	if err != nil {
 		t.Errorf("Repository cannot create Storage Client: %v", err)
 	}
 
 	ctx := context.Background()
-	inputFile, err := os.Open(fileName)
+	inputFile, err := os.Open(testFile)
 	if err != nil {
 		panic(err)
 	}
