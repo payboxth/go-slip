@@ -5,7 +5,6 @@ go 1.16
 require (
 	cloud.google.com/go/storage v1.14.0
 	github.com/getsentry/sentry-go v0.10.0
-	github.com/goccy/go-yaml v1.8.9
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/google/uuid v1.1.2
 	github.com/stretchr/testify v1.6.1

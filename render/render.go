@@ -1,4 +1,4 @@
-package printer
+package render
 
 import (
 	"bytes"
@@ -8,15 +8,15 @@ import (
 	"github.com/payboxth/go-slip"
 )
 
-type printer struct{}
+type render struct{}
 
-func NewPrinter() slip.Printer {
-	p := &printer{}
+func New() slip.Render {
+	p := &render{}
 	return p
 }
 
 // H
-func (p *printer) HtmlToSlipJPG(html string, width int, format string) ([]byte, error) {
+func (p *render) HtmlToSlipJPG(html string, width int, format string) ([]byte, error) {
 	mailTmpl, err := template.New("test").Parse(html)
 	if err != nil {
 
