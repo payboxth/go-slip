@@ -10,10 +10,10 @@ import (
 	"github.com/getsentry/sentry-go"
 
 	"github.com/payboxth/go-slip"
-	slipendpoint "github.com/payboxth/go-slip/endpoint"
-	sliphandler "github.com/payboxth/go-slip/handler"
-	sliprepository "github.com/payboxth/go-slip/repository"
-	slipservice "github.com/payboxth/go-slip/service"
+	"github.com/payboxth/go-slip/endpoint"
+	"github.com/payboxth/go-slip/handler"
+	"github.com/payboxth/go-slip/repository"
+	"github.com/payboxth/go-slip/service"
 )
 
 var (
@@ -32,7 +32,7 @@ func main() {
 	// Flush buffered events before the program terminates.
 	defer sentry.Flush(2 * time.Second)
 
-	database, err := sliprepository.NewBolt("slip.db")
+	database, err := repository.NewBolt("slip.db")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -43,16 +43,16 @@ func main() {
 	}
 	credentialFile = homeDir + credentialFile
 	// Create new Google Cloud Storage(GCS) instant with Service Account Key in srcret folder.
-	storage, err := sliprepository.NewGCS(bucketName, credentialFile)
+	storage, err := repository.NewGCS(bucketName, credentialFile)
 	if err != nil {
 		sentry.CaptureMessage(err.Error())
 	}
 	// Create new Slip Service and Endpoint
-	service := slipservice.New(database, storage)
-	endpoint := slipendpoint.New(service)
+	service := service.New(database, storage)
+	endpoint := endpoint.New(service)
 
 	mux := http.NewServeMux()
-	mux.Handle("/", sliphandler.New(service))
+	mux.Handle("/", handler.New(service))
 	mux.Handle("/slip/", http.StripPrefix("/slip", slip.NewHTTPTransport(endpoint)))
 
 	http.ListenAndServe(":8080", mux)

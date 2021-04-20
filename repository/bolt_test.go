@@ -56,31 +56,31 @@ func TestDB_Insert(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	lines := []slip.Line{
-		{
-			LineNumber:  1,
-			SKU:         "123456",
-			Description: "Product Name1",
-			Quantity:    1.0,
-			Price:       100,
-			Note:        "",
-		},
-		{
-			LineNumber:  2,
-			SKU:         "78910",
-			Description: "Product Name2",
-			Quantity:    2.0,
-			Price:       50,
-			Note:        "Test Note",
-		},
-	}
+
 	body := &slip.Body{
-		DocNumber:  "101010",
-		DocDate:    "93993",
-		RefNumber:  "00001",
 		Title:      "MakeKAFE",
+		DocDate:    "2021-04-02T15:04:05+07:00", // time formated in RFC3339
+		DocNumber:  "000001",
+		Ref:        "202341",
 		CreateDate: time.Now().Format(time.RFC3339),
-		Lines:      lines,
+		Lines: []slip.Line{
+			{
+				Seq:   1,
+				SKU:   "123456",
+				Name:  "Product Name1",
+				Qty:   1.0,
+				Price: 100,
+				Note:  "",
+			},
+			{
+				Seq:   2,
+				SKU:   "78910",
+				Name:  "Product Name2",
+				Qty:   2.0,
+				Price: 50,
+				Note:  "Test Note",
+			},
+		},
 	}
 	ctx := context.Background()
 
@@ -114,26 +114,26 @@ func TestDB_FindByID(t *testing.T) {
 
 	lines := []slip.Line{
 		{
-			LineNumber:  1,
-			SKU:         "123456",
-			Description: "Product Name1",
-			Quantity:    1.0,
-			Price:       100,
-			Note:        "",
+			Seq:   1,
+			SKU:   "123456",
+			Name:  "Product Name1",
+			Qty:   1.0,
+			Price: 100,
+			Note:  "",
 		},
 		{
-			LineNumber:  2,
-			SKU:         "78910",
-			Description: "Product Name2",
-			Quantity:    2.0,
-			Price:       50,
-			Note:        "Test Note",
+			Seq:   2,
+			SKU:   "78910",
+			Name:  "Product Name2",
+			Qty:   2.0,
+			Price: 50,
+			Note:  "Test Note",
 		},
 	}
 	bodyIn := &slip.Body{
 		DocNumber:  "101010",
 		DocDate:    "93993",
-		RefNumber:  "00001",
+		Ref:        "00001",
 		Title:      "MakeKAFE",
 		CreateDate: time.Now().Format(time.RFC3339),
 		Lines:      lines,
