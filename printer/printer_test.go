@@ -3,13 +3,13 @@ package printer_test
 import (
 	"testing"
 
-	"github.com/payboxth/go-slip/print"
+	"github.com/goccy/go-yaml/printer"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestNewPrinter(t *testing.T) {
-	printer := print.NewPrinter()
-	assert.NotNil(t, printer, "NewPrinter should not nil: %v", printer)
+	p := printer.NewPrinter()
+	assert.NotNil(t, p, "NewPrinter should not nil: %v", p)
 }
 
 // Test HTMLtoSlipJPG must install wkhtml to host server by
