@@ -1,23 +1,23 @@
 package slip
 
 type Body struct {
-	ID          string
-	DocDate     string
-	DocNumber   string
-	RefNumber   string
-	Title       string
-	Total       float32
-	ImageURL    string
-	AccessToken string
-	CreateDate  string
-	Lines       []Line
+	ID          string  `json:"id"`
+	Title       string  `json:"title"`
+	DocDate     string  `json:"doc_date"`
+	DocNumber   string  `json:"doc_number"`
+	Ref         string  `json:"ref"`
+	Total       float32 `json:"total"`
+	ImageURL    string  `json:"image_url"`
+	AccessToken string  `json:"access_token"`
+	CreateDate  string  `json:"create_date"`
+	Lines       []Line  `json:"lines"`
 }
 
 type Line struct {
-	LineNumber  int8
-	SKU         string
-	Description string
-	Quantity    float32
-	Price       float32
-	Note        string
+	Seq   int8    `json:"seq"`
+	SKU   string  `json:"sku"`
+	Name  string  `json:"name"`
+	Qty   float32 `json:"qty"`
+	Price float32 `json:"price"`
+	Note  string  `json:"note"`
 }

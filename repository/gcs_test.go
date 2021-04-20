@@ -57,7 +57,7 @@ func TestStoreFile(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Error on s.StoreFile: %v", err)
 	}
-
+	assert.NotNil(t, url, "url should not nil")
 	expected := "https://storage.googleapis.com/paybox_slip/test/"
 	assert.Containsf(t, url, expected, "Return URL does not contain ecpected = %v", url)
 	assert.NotZerof(t, url, "URL is not empty as: %v", url)
@@ -99,6 +99,7 @@ func TestStoreByte(t *testing.T) {
 	generateName := uuid.New().String()
 	objectName := fmt.Sprintf("%s/%s.%s", folderName, generateName, "png")
 	t.Logf("objectName = %v", objectName)
+
 	url, err := s.StoreByte(ctx, b, objectName)
 	if err != nil {
 		assert.NotNilf(t, err, "Error on s.StoreByte(): %v", err)
