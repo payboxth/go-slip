@@ -1,4 +1,4 @@
-package sliplib
+package print
 
 import (
 	"bytes"

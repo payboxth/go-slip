@@ -1,6 +1,7 @@
 # go-slip
 
-Service for e-slip generator in golang. MIT license.
+Go Package Library for e-Slip generator. MIT license.
+This package has dependency required WkHTML.
 
 # Purpose
 
