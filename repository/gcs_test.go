@@ -12,7 +12,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/payboxth/go-slip/repository"
+	"github.com/payboxth/goslip/repository"
 )
 
 var (

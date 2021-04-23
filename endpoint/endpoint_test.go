@@ -6,9 +6,9 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/payboxth/go-slip"
-	"github.com/payboxth/go-slip/endpoint"
-	"github.com/payboxth/go-slip/mock"
+	"github.com/payboxth/goslip"
+	"github.com/payboxth/goslip/endpoint"
+	"github.com/payboxth/goslip/mock"
 )
 
 func TestCreate(t *testing.T) {

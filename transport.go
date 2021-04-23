@@ -3,7 +3,7 @@ package slip
 import (
 	"net/http"
 
-	"github.com/payboxth/go-slip/internal/httptransport"
+	"github.com/payboxth/goslip/internal/httptransport"
 )
 
 type httpError struct {

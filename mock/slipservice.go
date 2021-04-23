@@ -3,7 +3,7 @@ package mock
 import (
 	"context"
 
-	"github.com/payboxth/go-slip"
+	"github.com/payboxth/goslip"
 )
 
 // SlipService mocks domain1 service

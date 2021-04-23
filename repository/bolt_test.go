@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/payboxth/go-slip"
-	"github.com/payboxth/go-slip/repository"
+	"github.com/payboxth/goslip"
+	"github.com/payboxth/goslip/repository"
 	"github.com/stretchr/testify/assert"
 )
 

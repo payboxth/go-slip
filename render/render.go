@@ -5,7 +5,7 @@ import (
 	"html/template"
 	"os"
 
-	"github.com/payboxth/go-slip"
+	"github.com/payboxth/goslip"
 )
 
 type render struct{}
@@ -15,8 +15,8 @@ func New() slip.Render {
 	return p
 }
 
-// H
-func (p *render) HtmlToSlipJPG(html string, width int, format string) ([]byte, error) {
+// Jpg is a slip rendering to binary JPEG file function.
+func (r *render) Bytes(html string, width int, format string) ([]byte, error) {
 	mailTmpl, err := template.New("test").Parse(html)
 	if err != nil {
 
@@ -43,29 +43,19 @@ func (p *render) HtmlToSlipJPG(html string, width int, format string) ([]byte, e
 	return out, nil
 }
 
-// func (s *printer) UploadToGCLOUD(_byte []byte) (url *string, err error) {
-// 	ctx := context.Background()
-// 	bh := s.client.Bucket(s.bucket)
-// 	// Next check if the bucket exists
-// 	if _, err := bh.Attrs(ctx); err != nil {
-// 		return nil, err
-// 	}
+func (r *render) Bytes2(body *slip.Body, html string, width int, format string) ([]byte, error) {
+	tmpl, err := template.New("slip").Parse(html)
+	if err != nil {
+		return nil, err
+	}
+	slip := &slip.Body{}
+	buf := new(bytes.Buffer)
+	err = tmpl.Execute(buf, slip)
+	if err != nil {
+		return nil, err
+	}
+	var b []byte
+	// TODO implement how to return image byte.
 
-// 	newUUID, err := uuid.NewV4()
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	filename := strings.Replace(newUUID.String(), "-", "", -1) + ".jpg"
-// 	obj := bh.Object(filename)
-// 	w := obj.NewWriter(ctx)
-// 	buf := bytes.NewBuffer(nil)
-
-// 	buf.Write(_byte)
-// 	w.ACL = append(w.ACL, storage.ACLRule{Entity: storage.AllUsers, Role: storage.RoleReader})
-// 	w.CacheControl = "public, max-age=31536000"
-// 	if _, err := io.Copy(w, buf); err != nil {
-// 		return nil, err
-// 	}
-// 	filename = s.baseURL + "/" + filename
-// 	return &filename, nil
-// }
+	return b, nil
+}

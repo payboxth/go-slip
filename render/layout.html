@@ -1,39 +1,3 @@
-package render_test
-
-import (
-	"github.com/payboxth/goslip"
-	"testing"
-	"time"
-
-	"github.com/payboxth/goslip/render"
-	"github.com/stretchr/testify/assert"
-)
-
-func TestNewRender(t *testing.T) {
-	r := render.New()
-	assert.NotNil(t, r, "NewPrinter should not nil: %v", r)
-}
-
-// Test HTMLtoSlipJPG must install wkhtml to host server by
-func TestRender_Bytes1(t *testing.T) {
-	r := render.New()
-	b, err := r.Bytes(html, 561, "jpg")
-	if err != nil {
-		t.Errorf("printer.Bytes() error: %v", err)
-	}
-	assert.NotNil(t, b, "Bytes() should not return nil")
-}
-
-func TestRender_Bytes2(t *testing.T) {
-	r := render.New()
-	b, err := r.Bytes2(body, html, 561, "jpg")
-	if err != nil {
-		t.Errorf("Error cal render.Byte2(): %v", err)
-	}
-	assert.NotNil(t, b, "Bytes2() should not return nil")
-}
-
-var html = `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -143,30 +107,3 @@ var html = `
     }
 </style>
 </html>
-`
-
-var body = &slip.Body{
-	Title:      "MakeKAFE",
-	DocDate:    "2021-04-02T15:04:05+07:00", // time formated in RFC3339
-	DocNumber:  "000001",
-	Ref:        "202341",
-	CreateDate: time.Now().Format(time.RFC3339),
-	Lines: []slip.Line{
-		{
-			Seq:   1,
-			SKU:   "123456",
-			Name:  "Product Name1",
-			Qty:   1.0,
-			Price: 100,
-			Note:  "",
-		},
-		{
-			Seq:   2,
-			SKU:   "78910",
-			Name:  "Product Name2",
-			Qty:   2.0,
-			Price: 50,
-			Note:  "Test Note",
-		},
-	},
-}

@@ -1,4 +1,4 @@
-module github.com/payboxth/go-slip
+module github.com/payboxth/goslip
 
 go 1.16
 
